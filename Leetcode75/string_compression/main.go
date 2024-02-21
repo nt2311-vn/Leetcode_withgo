@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 func main() {
@@ -9,30 +10,29 @@ func main() {
 }
 
 func compress(chars []byte) int {
-	if len(chars) == 1 {
-		return 1
-	}
+	writeIndex := 0
 
-	mapCompress := map[byte]int{}
+	for i := 0; i < len(chars); {
+		count := 0
 
-	for _, v := range chars {
-		_, exist := mapCompress[v]
+		char := chars[i]
 
-		if exist {
-			mapCompress[v]++
-		} else {
-			mapCompress[v] = 1
+		for i < len(chars) && chars[i] == char {
+			count++
+			i++
+		}
+
+		chars[writeIndex] = char
+		writeIndex++
+
+		if count > 1 {
+			countStr := strconv.Itoa(count)
+
+			for _, c := range countStr {
+				chars[writeIndex] = byte(c)
+				writeIndex++
+			}
 		}
 	}
-
-	chars = make([]byte, 0)
-
-	for key, value := range mapCompress {
-		chars = append(chars, key)
-		chars = append(chars, byte(value))
-	}
-
-	fmt.Println(chars)
-
-	return len(chars)
+	return writeIndex
 }
