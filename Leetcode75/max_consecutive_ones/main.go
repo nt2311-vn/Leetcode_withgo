@@ -15,20 +15,25 @@ func main() {
 }
 
 func longestOnes(nums []int, k int) int {
-	currentMax := 0
-	currentCount := 0
+	left, maxLen, zeroCount := 0, 0, 0
 
-	for _, val := range nums {
-		if val == 1 {
-			currentCount++
-		} else {
-			currentMax = maxNum(currentMax, currentCount)
-			currentCount++
-			k--
+	for right := 0; right < len(nums); right++ {
+		if nums[right] == 0 {
+			zeroCount++
+		}
+		for zeroCount > k {
+			if nums[left] == 0 {
+				zeroCount--
+			}
+			left++
+		}
+
+		currentWindowLen := right - left + 1
+		if currentWindowLen > maxLen {
+			maxLen = currentWindowLen
 		}
 	}
-
-	return currentMax
+	return maxLen
 }
 
 func maxNum(a, b int) int {
